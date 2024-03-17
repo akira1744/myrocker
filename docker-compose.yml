@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  rstudio:
+    build: 
+      context: ./docker/
+      dockerfile: Dockerfile
+    image: nujabec/myrocker:20240124
+    ports:
+      - "50001-50001:8787"
+    volumes:
+      - ../srv/:/home/rstudio/srv/
+      - renv:/home/rstudio/.cache/R/renv
+    environment:
+      PASSWORD: rs
+      ROOT: "TRUE"
+      TZ: Asia/Tokyo
+    tty: true
+    stdin_open: true
+    restart: always
+    networks:
+      - pgnetwork
+volumes:
+  renv:
+    external: true
+
+networks:
+  pgnetwork:
+    external: true

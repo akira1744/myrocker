@@ -1,0 +1,21 @@
+{
+    "restore_source_documents": false,
+    "save_workspace": "never",
+    "load_workspace": false,
+    "initial_working_directory": "~",
+    "always_save_history": false,
+    "restore_last_project": false,
+    "show_invisibles": true,
+    "highlight_r_function_calls": true,
+    "rainbow_parentheses": true,
+    "auto_append_newline": true,
+    "code_completion_characters": 1,
+    "default_encoding": "UTF-8",
+    "indent_guides": "rainbowlines",
+    "syntax_color_console": true,
+    "font_size_points": 11,
+    "editor_theme": "Cobalt",
+    "server_editor_font_enabled": true,
+    "server_editor_font": "DejaVu Sans Mono",
+    "posix_terminal_shell": "bash"
+}
