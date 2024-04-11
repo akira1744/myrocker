@@ -13,7 +13,7 @@
 docker volume create renv
 
 # イメージのpull
-docker pull nujabec/myrocker:20240124
+docker pull nujabec/myrocker:20240411
 
 # (イメージの作成)
 # docker-compose build 
