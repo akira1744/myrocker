@@ -31,7 +31,8 @@ docker compose up -d --scale rstudio=10
 # push方法
 
 ```bash
-docker push nujabec/myrocker:20240124
+docker login
+docker push nujabec/myrocker:20240411
 ```
 
 ## オフライン環境にdocker imageを持っていく方法

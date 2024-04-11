@@ -235,6 +235,16 @@ RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
 #     qlcMatrix \
 #     && rm -rf /tmp/downloaded_packages/
 
+# 20240411 sparklineを入れる必要があったので、合わせていくつかpackageを追加
+RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
+    sparkline \
+    corrr \
+    psych \
+    PerformanceAnalytics \
+    rmapshaper \
+    leaflet \
+    && rm -rf /tmp/downloaded_packages/
+
 # Copy RStudio settings
 COPY --chown=rstudio:rstudio rstudio-prefs_mysettings.json /home/rstudio/.config/rstudio/rstudio-prefs.json
 COPY --chown=rstudio:rstudio dotRprofile /home/rstudio/.Rprofile
