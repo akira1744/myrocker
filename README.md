@@ -40,9 +40,9 @@ docker push nujabec/myrocker:20240411
 ```bash
 # オンライン端末でイメージを作成
 # docker imageをtarファイルに変換
-docker save nujabec/myrocker:20240124 > myrocker_20231116.tar
+docker save nujabec/myrocker:20240411 > myrocker_20240411.tar
 # オフライン端末で、tarファイルからdocker imageを読む
-docker load < myrocker_20231116.tar
+docker load < myrocker_20240411.tar
 ```
 ## sqlserverのODBCdriverを追加
 

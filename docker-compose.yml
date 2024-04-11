@@ -18,12 +18,6 @@ services:
     tty: true
     stdin_open: true
     restart: always
-    networks:
-      - pgnetwork
 volumes:
   renv:
-    external: true
-
-networks:
-  pgnetwork:
     external: true
