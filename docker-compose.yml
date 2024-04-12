@@ -7,12 +7,9 @@ services:
       dockerfile: Dockerfile
     image: nujabec/myrocker:20240412
     ports:
-      - "8787:8787"
-      - "80:3838"
+      - "50000:8787"
     volumes:
       - ../srv/:/home/rstudio/srv/
-      - ../srv/shinyapps:/srv/shiny-server/
-      - ../srv/shinylog:/var/log/shiny-server/
       - renv:/home/rstudio/.cache/R/renv
     environment:
       PASSWORD: rs

@@ -60,5 +60,4 @@ https://learn.microsoft.com/ja-jp/sql/connect/odbc/linux-mac/installing-the-micr
 ## 20240412変更点
 
 - userを追加
-- shinyserverを追加
 - pgnetworkを追加

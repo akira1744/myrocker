@@ -276,6 +276,3 @@ RUN /home/rstudio/add_users.sh user01 user02 user03 user04 user05 user06 user07 
 
 # homeディレクトリの権限を変更
 RUN chmod -R 777 /home
-
-# Install shiny server
-RUN /rocker_scripts/install_shiny_server.sh
