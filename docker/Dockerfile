@@ -265,3 +265,17 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/truste
 
 ENV PATH="${PATH}:/opt/mssql-tools/bin"
 
+# Add users
+COPY add_users.sh /home/rstudio/add_users.sh
+RUN chmod +x /home/rstudio/add_users.sh
+RUN /home/rstudio/add_users.sh user01 user02 user03 user04 user05 user06 user07 user08 user09 user10 && \
+    /home/rstudio/add_users.sh user11 user12 user13 user14 user15 user16 user17 user18 user19 user20 && \
+    /home/rstudio/add_users.sh user21 user22 user23 user24 user25 user26 user27 user28 user29 user30 && \
+    /home/rstudio/add_users.sh user31 user32 user33 user34 user35 user36 user37 user38 user39 user40 && \
+    /home/rstudio/add_users.sh user41 user42 user43 user44 user45 user46 user47 user48 user49 user50
+
+# homeディレクトリの権限を変更
+RUN chmod -R 777 /home
+
+# Install shiny server
+RUN /rocker_scripts/install_shiny_server.sh

@@ -5,11 +5,14 @@ services:
     build: 
       context: ./docker/
       dockerfile: Dockerfile
-    image: nujabec/myrocker:20240411
+    image: nujabec/myrocker:20240412
     ports:
-      - "50001-50001:8787"
+      - "8787:8787"
+      - "80:3838"
     volumes:
       - ../srv/:/home/rstudio/srv/
+      - ../srv/shinyapps:/srv/shiny-server/
+      - ../srv/shinylog:/var/log/shiny-server/
       - renv:/home/rstudio/.cache/R/renv
     environment:
       PASSWORD: rs
@@ -18,6 +21,14 @@ services:
     tty: true
     stdin_open: true
     restart: always
+    networks:
+      - pgnetwork
+
 volumes:
   renv:
     external: true
+
+networks:
+    pgnetwork:
+      external: true
+

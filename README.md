@@ -12,8 +12,11 @@
 # renvのcache用にvolume作成(初回のみ)
 docker volume create renv
 
+# pgnetworkの作成(初回のみ)
+docker network create pgnetwork
+
 # イメージのpull
-docker pull nujabec/myrocker:20240411
+docker pull nujabec/myrocker:20240412
 
 # (イメージの作成)
 # docker-compose build 
@@ -32,7 +35,7 @@ docker compose up -d --scale rstudio=10
 
 ```bash
 docker login
-docker push nujabec/myrocker:20240411
+docker push nujabec/myrocker:20240412
 ```
 
 ## オフライン環境にdocker imageを持っていく方法
@@ -40,9 +43,9 @@ docker push nujabec/myrocker:20240411
 ```bash
 # オンライン端末でイメージを作成
 # docker imageをtarファイルに変換
-docker save nujabec/myrocker:20240411 > myrocker_20240411.tar
+docker save nujabec/myrocker:20240412 > myrocker_20240412.tar
 # オフライン端末で、tarファイルからdocker imageを読む
-docker load < myrocker_20240411.tar
+docker load < myrocker_20240412.tar
 ```
 ## sqlserverのODBCdriverを追加
 
@@ -54,3 +57,8 @@ https://qiita.com/miraijin/items/0c7bfbd70234967e87bd
 
 https://learn.microsoft.com/ja-jp/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver15&tabs=alpine18-install%2Calpine17-install%2Cdebian8-install%2Credhat7-13-install%2Crhel7-offline#microsoft-odbc-17
 
+## 20240412変更点
+
+- userを追加
+- shinyserverを追加
+- pgnetworkを追加
