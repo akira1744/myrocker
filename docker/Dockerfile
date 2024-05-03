@@ -277,12 +277,17 @@ RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
     rdrobust \
     rdd \
     S7 \
+    felp \
+    colorBlindness \
+    patternplot \
+    tidymodels \
     && rm -rf /tmp/downloaded_packages/
 
 # 20240503私たちのRようにpackageを追加(GitHub)
 RUN installGithub.r \
     ropensci/rnaturalearthhires \ 
     jthomasmock/gtExtras \
+    coolbutuseless/ggpattern \
     && rm -rf /tmp/downloaded_packages/ 
 
 ##########################################################################################################

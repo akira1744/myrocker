@@ -57,7 +57,18 @@ https://qiita.com/miraijin/items/0c7bfbd70234967e87bd
 
 https://learn.microsoft.com/ja-jp/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver15&tabs=alpine18-install%2Calpine17-install%2Cdebian8-install%2Credhat7-13-install%2Crhel7-offline#microsoft-odbc-17
 
-## 20240412変更点
+## History
+
+### 2024/04/12
 
 - userを追加
 - pgnetworkを追加
+
+### 2024/05/03
+
+- 私たちのR用にpackageを追加
+- Tokyo.R2024/4/20で紹介されていたpackageを追加
+- rstudio-prefs_mysettingsを更新
+  - Consoleパネルを右に変更
+  - CRANをTokyoに変更
+  - QuartoのPreviewをViewerパネルに変更
