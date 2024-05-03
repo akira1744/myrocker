@@ -245,10 +245,6 @@ RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
     leaflet \
     && rm -rf /tmp/downloaded_packages/
 
-# Copy RStudio settings
-COPY --chown=rstudio:rstudio rstudio-prefs_mysettings.json /home/rstudio/.config/rstudio/rstudio-prefs.json
-COPY --chown=rstudio:rstudio dotRprofile /home/rstudio/.Rprofile
-
 # sqlserverようにMcicrosoft ODBC17のdriverを入れる
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc \
     # 上のcodeの解説: https://packages.microsoft.com/keys/microsoft.asc からデータを取得し、それを /etc/apt/trusted.gpg.d/microsoft.asc に書き込む
@@ -264,6 +260,38 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/truste
     && rm -rf /var/lib/apt/lists/*
 
 ENV PATH="${PATH}:/opt/mssql-tools/bin"
+
+# 20240503私たちのRようにpackageを追加
+RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
+    ggExtra \
+    ghibli \
+    latex2exp \
+    rnaturalearth \
+    rnaturalearthdata \
+    dagitty \
+    ggdag \
+    ggbump \
+    ggalluvial \
+    treemapify \
+    golem \
+    rdrobust \
+    rdd \
+    S7 \
+    && rm -rf /tmp/downloaded_packages/
+
+# 20240503私たちのRようにpackageを追加(GitHub)
+RUN installGithub.r \
+    ropensci/rnaturalearthhires \ 
+    jthomasmock/gtExtras \
+    && rm -rf /tmp/downloaded_packages/ 
+
+##########################################################################################################
+# 最終設定
+##########################################################################################################
+
+# Copy RStudio settings
+COPY --chown=rstudio:rstudio rstudio-prefs_mysettings.json /home/rstudio/.config/rstudio/rstudio-prefs.json
+COPY --chown=rstudio:rstudio dotRprofile /home/rstudio/.Rprofile
 
 # Add users
 COPY add_users.sh /home/rstudio/add_users.sh

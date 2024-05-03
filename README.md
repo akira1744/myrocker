@@ -16,7 +16,7 @@ docker volume create renv
 docker network create pgnetwork
 
 # イメージのpull
-docker pull nujabec/myrocker:20240412
+docker pull nujabec/myrocker:20240503
 
 # (イメージの作成)
 # docker-compose build 
@@ -35,7 +35,7 @@ docker compose up -d --scale rstudio=10
 
 ```bash
 docker login
-docker push nujabec/myrocker:20240412
+docker push nujabec/myrocker:20240503
 ```
 
 ## オフライン環境にdocker imageを持っていく方法
@@ -43,9 +43,9 @@ docker push nujabec/myrocker:20240412
 ```bash
 # オンライン端末でイメージを作成
 # docker imageをtarファイルに変換
-docker save nujabec/myrocker:20240412 > myrocker_20240412.tar
+docker save nujabec/myrocker:20240503 > myrocker_20240503.tar
 # オフライン端末で、tarファイルからdocker imageを読む
-docker load < myrocker_20240412.tar
+docker load < myrocker_20240503.tar
 ```
 ## sqlserverのODBCdriverを追加
 

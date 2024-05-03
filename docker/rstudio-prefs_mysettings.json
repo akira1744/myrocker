@@ -17,5 +17,47 @@
     "editor_theme": "Cobalt",
     "server_editor_font_enabled": true,
     "server_editor_font": "DejaVu Sans Mono",
-    "posix_terminal_shell": "bash"
+    "posix_terminal_shell": "bash",
+    "jobs_tab_visibility": "shown",
+    "cran_mirror": {
+        "name": "Japan (Tokyo) [https]",
+        "host": "The Institute of Statistical Mathematics, Tokyo",
+        "url": "https://cran.ism.ac.jp/",
+        "country": "jp",
+        "ok": 1,
+        "secondary": ""
+    },
+    "rmd_viewer_type": "pane",
+    "copilot_indexing_enabled": true,
+    "copilot_completions_delay": 1,
+    "panes": {
+        "quadrants": [
+            "Source",
+            "TabSet1",
+            "Console",
+            "TabSet2",
+            "HiddenTabSet"
+        ],
+        "tabSet1": [
+            "Environment",
+            "History",
+            "Connections",
+            "Build",
+            "VCS",
+            "Tutorial",
+            "Presentation"
+        ],
+        "tabSet2": [
+            "Files",
+            "Plots",
+            "Packages",
+            "Help",
+            "Viewer",
+            "Presentations"
+        ],
+        "hiddenTabSet": [],
+        "console_left_on_top": false,
+        "console_right_on_top": true,
+        "additional_source_columns": 0
+    }
 }
