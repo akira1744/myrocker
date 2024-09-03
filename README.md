@@ -16,10 +16,10 @@ docker volume create renv
 docker network create pgnetwork
 
 # イメージのpull
-docker pull nujabec/myrocker:20240503
+docker pull nujabec/myrocker:20240903
 
 # (イメージの作成)
-# docker-compose build 
+# docker-compose build
 
 # コンテナの起動
 docker-compose up -d
@@ -31,11 +31,11 @@ docker-compose up -d
 docker compose up -d --scale rstudio=10
 ```
  
-# push方法
+## push方法
 
 ```bash
 docker login
-docker push nujabec/myrocker:20240503
+docker push nujabec/myrocker:20240903
 ```
 
 ## オフライン環境にdocker imageを持っていく方法
@@ -43,10 +43,11 @@ docker push nujabec/myrocker:20240503
 ```bash
 # オンライン端末でイメージを作成
 # docker imageをtarファイルに変換
-docker save nujabec/myrocker:20240503 > myrocker_20240503.tar
+docker save nujabec/myrocker:20240903 > myrocker_20240903.tar
 # オフライン端末で、tarファイルからdocker imageを読む
-docker load < myrocker_20240503.tar
+docker load < myrocker_20240903.tar
 ```
+
 ## sqlserverのODBCdriverを追加
 
 参考1
@@ -72,3 +73,8 @@ https://learn.microsoft.com/ja-jp/sql/connect/odbc/linux-mac/installing-the-micr
   - Consoleパネルを右に変更
   - CRANをTokyoに変更
   - QuartoのPreviewをViewerパネルに変更
+
+### 2024/09/03
+
+- cronをinstall
+- user00を追加

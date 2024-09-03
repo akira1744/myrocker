@@ -290,6 +290,12 @@ RUN installGithub.r \
     coolbutuseless/ggpattern \
     && rm -rf /tmp/downloaded_packages/ 
 
+# 20240903 cronのinstall
+RUN apt-get update && \
+    apt-get install -y cron && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 ##########################################################################################################
 # 最終設定
 ##########################################################################################################
@@ -301,7 +307,7 @@ COPY --chown=rstudio:rstudio dotRprofile /home/rstudio/.Rprofile
 # Add users
 COPY add_users.sh /home/rstudio/add_users.sh
 RUN chmod +x /home/rstudio/add_users.sh
-RUN /home/rstudio/add_users.sh user01 user02 user03 user04 user05 user06 user07 user08 user09 user10 && \
+RUN /home/rstudio/add_users.sh user00 user01 user02 user03 user04 user05 user06 user07 user08 user09 user10 && \
     /home/rstudio/add_users.sh user11 user12 user13 user14 user15 user16 user17 user18 user19 user20 && \
     /home/rstudio/add_users.sh user21 user22 user23 user24 user25 user26 user27 user28 user29 user30 && \
     /home/rstudio/add_users.sh user31 user32 user33 user34 user35 user36 user37 user38 user39 user40 && \
