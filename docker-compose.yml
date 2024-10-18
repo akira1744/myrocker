@@ -5,9 +5,9 @@ services:
     build: 
       context: ./docker/
       dockerfile: Dockerfile
-    image: nujabec/myrocker:20240903
+    image: nujabec/myrocker:20241018
     ports:
-      - "50000:8787"
+      - "50001:8787"
     volumes:
       - ../srv/:/home/rstudio/srv/
       - renv:/home/rstudio/.cache/R/renv

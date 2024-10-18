@@ -6,6 +6,7 @@
 - RstudioServer(Enabel GitHub Copilot)
 - オフライン環境で使うケースも想定し大量のパッケージをinstall済み
 
+
 ## 使い方
 
 ```bash
@@ -16,7 +17,7 @@ docker volume create renv
 docker network create pgnetwork
 
 # イメージのpull
-docker pull nujabec/myrocker:20240903
+docker pull nujabec/myrocker:20241018
 
 # (イメージの作成)
 # docker-compose build
@@ -24,18 +25,11 @@ docker pull nujabec/myrocker:20240903
 # コンテナの起動
 docker-compose up -d
 ```
-
-## コンテナを複数台起動する場合
-
-```bash
-docker compose up -d --scale rstudio=10
-```
- 
 ## push方法
 
 ```bash
 docker login
-docker push nujabec/myrocker:20240903
+docker push nujabec/myrocker:20241018
 ```
 
 ## オフライン環境にdocker imageを持っていく方法
@@ -43,9 +37,9 @@ docker push nujabec/myrocker:20240903
 ```bash
 # オンライン端末でイメージを作成
 # docker imageをtarファイルに変換
-docker save nujabec/myrocker:20240903 > myrocker_20240903.tar
+docker save nujabec/myrocker:20241018 > myrocker_20241018.tar
 # オフライン端末で、tarファイルからdocker imageを読む
-docker load < myrocker_20240903.tar
+docker load < myrocker_20241018.tar
 ```
 
 ## sqlserverのODBCdriverを追加
@@ -78,3 +72,12 @@ https://learn.microsoft.com/ja-jp/sql/connect/odbc/linux-mac/installing-the-micr
 
 - cronをinstall
 - user00を追加
+
+### 2024/09/07
+
+- DuckDBをinstall
+- 過去のパッケージは特に変更しなかった
+
+### 2024/10/18
+
+- patchwork1.1.3だとエラーが出たので、Rのパッケージをすべて最新のものにアップデートした。

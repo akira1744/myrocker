@@ -285,16 +285,28 @@ RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
 
 # 20240503私たちのRようにpackageを追加(GitHub)
 RUN installGithub.r \
-    ropensci/rnaturalearthhires \ 
+    ropensci/rnaturalearthhires \
     jthomasmock/gtExtras \
     coolbutuseless/ggpattern \
-    && rm -rf /tmp/downloaded_packages/ 
+    && rm -rf /tmp/downloaded_packages/
 
 # 20240903 cronのinstall
 RUN apt-get update && \
     apt-get install -y cron && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# 20240907 install DuckDB
+RUN apt-get update && apt-get install -y wget unzip \
+    && wget https://github.com/duckdb/duckdb/releases/download/v0.10.2/duckdb_cli-linux-amd64.zip \
+    && unzip duckdb_cli-linux-amd64.zip -d /usr/local/bin \
+    && rm duckdb_cli-linux-amd64.zip
+
+# 20240907 install DuckDB R packages
+RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
+    duckdb \
+    duckplyr \
+    && rm -rf /tmp/downloaded_packages/
 
 ##########################################################################################################
 # 最終設定
