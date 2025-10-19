@@ -17,7 +17,7 @@ docker volume create renv
 docker network create pgnetwork
 
 # イメージのpull
-docker pull nujabec/myrocker:20241018
+docker pull nujabec/myrocker:20250917
 
 # (イメージの作成)
 # docker-compose build
@@ -29,7 +29,7 @@ docker-compose up -d
 
 ```bash
 docker login
-docker push nujabec/myrocker:20241018
+docker push nujabec/myrocker:20250917
 ```
 
 ## オフライン環境にdocker imageを持っていく方法
@@ -37,9 +37,9 @@ docker push nujabec/myrocker:20241018
 ```bash
 # オンライン端末でイメージを作成
 # docker imageをtarファイルに変換
-docker save nujabec/myrocker:20241018 > myrocker_20241018.tar
+docker save nujabec/myrocker:20250917 > myrocker_20250917.tar
 # オフライン端末で、tarファイルからdocker imageを読む
-docker load < myrocker_20241018.tar
+docker load < myrocker_20250917.tar
 ```
 
 ## sqlserverのODBCdriverを追加
@@ -51,6 +51,18 @@ https://qiita.com/miraijin/items/0c7bfbd70234967e87bd
 参考2
 
 https://learn.microsoft.com/ja-jp/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver15&tabs=alpine18-install%2Calpine17-install%2Cdebian8-install%2Credhat7-13-install%2Crhel7-offline#microsoft-odbc-17
+
+## gemini cliのapi key 設定方法
+
+### Google AI StudioでAPI keyを取得
+
+https://j-aic.com/techblog/google-ai-studio-api-free
+
+## API KEYの環境変数設定 
+
+docker/.env
+
+GEMINI_API_KEY=Your API KEY
 
 ## History
 
@@ -81,3 +93,10 @@ https://learn.microsoft.com/ja-jp/sql/connect/odbc/linux-mac/installing-the-micr
 ### 2024/10/18
 
 - patchwork1.1.3だとエラーが出たので、Rのパッケージをすべて最新のものにアップデートした。
+
+### 2025/10/19
+
+- claude codeを追加
+- gemini cliを追加
+- イメージタグを20250917に更新
+
