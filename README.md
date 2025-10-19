@@ -58,7 +58,7 @@ https://learn.microsoft.com/ja-jp/sql/connect/odbc/linux-mac/installing-the-micr
 
 https://j-aic.com/techblog/google-ai-studio-api-free
 
-## API KEYの環境変数設定 
+## API KEYの環境変数設定
 
 docker/.env
 

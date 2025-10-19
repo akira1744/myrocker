@@ -15,6 +15,9 @@ do
     
     # ln -s /home/rstudio/srv /home/${USER}/srv で /home/rstudio/srv を /home/${USER}/srv へシンボリックリンクします。
     ln -s /home/rstudio/srv /home/${USER}/srv
+
+        # ln -s /home/rstudio/srv /home/${USER}/srv で /home/rstudio/srv を /home/${USER}/srv へシンボリックリンクします。
+    ln -s /home/rstudio/mpd /home/${USER}/mpd
     
     # echo "umask 000" >> /home/${USER}/.bashrc でユーザーの .bashrc ファイルに umask 000 を追加します。
     # これにより、新しく作成されるファイルのパーミッションが全ユーザーに対して読み書き可能になります。
@@ -24,10 +27,10 @@ do
     mkdir -p /home/${USER}/.config/rstudio
     
     cp /home/rstudio/.config/rstudio/rstudio-prefs.json /home/${USER}/.config/rstudio/rstudio-prefs.json
-    
+
     # chown ${USER}:rstudio /home/${USER}/.config/rstudio/rstudio-prefs.json で rstudio-prefs.json ファイルの所有者を新しく作成したユーザーに変更します
     chown ${USER}:rstudio /home/${USER}/.config/rstudio/rstudio-prefs.json
-    
+
     cp /home/rstudio/.Rprofile /home/${USER}/.Rprofile
     
     # chown ${USER}:rstudio /home/${USER}/.Rprofile で .Rprofile ファイルの所有者を新しく作成したユーザーに変更します。
