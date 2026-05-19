@@ -2,9 +2,13 @@
 
 ## 概要
 
-- R 4.3.2
-- RstudioServer(Enabel GitHub Copilot)
-- オフライン環境で使うケースも想定し大量のパッケージをinstall済み
+- R 4.5.3（rocker/geospatial:4.5.3 ベース、Ubuntu 24.04 noble）
+- RStudio Server（GitHub Copilot 有効、ポート 50003）
+- **Shiny Server 同梱（ポート 81）**
+- オフライン環境で使うケースも想定し大量のパッケージを install 済み
+- CRAN リポジトリは Posit Package Manager (PPM) を 2026-05-18 で日付ピン
+- 同梱 CLI: Claude Code、Gemini CLI、GitHub CLI、DuckDB、LibreOffice、Microsoft ODBC 17
+- ユーザー: user00〜user20（パスワード=ユーザー名）
 
 
 ## 使い方
@@ -17,7 +21,7 @@ docker volume create renv
 docker network create pgnetwork
 
 # イメージのpull
-docker pull nujabec/myrocker:20250917
+docker pull nujabec/myrocker:20260519
 
 # (イメージの作成)
 # docker-compose build
@@ -29,7 +33,7 @@ docker-compose up -d
 
 ```bash
 docker login
-docker push nujabec/myrocker:20250917
+docker push nujabec/myrocker:20260519
 ```
 
 ## オフライン環境にdocker imageを持っていく方法
@@ -37,9 +41,9 @@ docker push nujabec/myrocker:20250917
 ```bash
 # オンライン端末でイメージを作成
 # docker imageをtarファイルに変換
-docker save nujabec/myrocker:20250917 > myrocker_20250917.tar
+docker save nujabec/myrocker:20260519 > myrocker_20260519.tar
 # オフライン端末で、tarファイルからdocker imageを読む
-docker load < myrocker_20250917.tar
+docker load < myrocker_20260519.tar
 ```
 
 ## sqlserverのODBCdriverを追加
@@ -65,6 +69,20 @@ docker/.env
 GEMINI_API_KEY=Your API KEY
 
 ## History
+
+### 2026/05/19
+
+- R を 4.5.3 にアップデート（rocker/geospatial:4.5.3、Ubuntu 24.04 noble ベース）
+- **Shiny Server を同梱**（旧 myrocker-shiny を統合、ポート 81）
+- 不足パッケージ追加: arrow, Polychrome, future, openxlsx2, reactable,
+  shinyWidgets, shinybusy, shinycssloaders, shinymanager, shinytest2,
+  sortable, stringdist, tidyxl, waiter, writexl
+- samba (CIFS マウント) を廃止
+- PPM 日付ピン（2026-05-18）で再現性を担保
+- Microsoft ODBC リポジトリを signed-by 方式に修正（Ubuntu 24.04 対応）
+- Claude Code / Gemini CLI を最終レイヤーに分離（オンラインの差分ビルド高速化）
+- HEALTHCHECK 追加
+- イメージタグ: 20260519
 
 ### 2024/04/12
 
@@ -98,5 +116,5 @@ GEMINI_API_KEY=Your API KEY
 
 - claude codeを追加
 - gemini cliを追加
-- イメージタグを20250917に更新
+- イメージタグを20260519に更新
 

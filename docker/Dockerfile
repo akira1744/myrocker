@@ -1,5 +1,5 @@
 # https://github.com/rocker-org/rocker-versioned2
-FROM rocker/geospatial:4.3.2
+FROM rocker/geospatial:4.5.3
 
 # OS環境（rockerはdebianベース）に日本語ロケールを追加し切り替え
 ENV LANG=ja_JP.UTF-8 \
@@ -23,12 +23,11 @@ RUN sed -i '$d' /etc/locale.gen && \
         unzip \
         curl \
         gnupg \
-        cifs-utils \
         xdg-utils \
         unixodbc-dev && \
-    # Microsoft ODBC Driver installation
-    curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc && \
-    curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | tee /etc/apt/sources.list.d/mssql-release.list && \
+    # Microsoft ODBC Driver installation (Ubuntu 24.04: prod.list already references /usr/share/keyrings/microsoft-prod.gpg)
+    curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg && \
+    curl -fsSL https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list -o /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && \
     ACCEPT_EULA=Y apt-get install -y msodbcsql17 mssql-tools && \
     # Node.js installation
@@ -47,20 +46,23 @@ RUN sed -i '$d' /etc/locale.gen && \
     wget https://github.com/duckdb/duckdb/releases/download/v0.10.2/duckdb_cli-linux-amd64.zip && \
     unzip duckdb_cli-linux-amd64.zip -d /usr/local/bin && \
     rm duckdb_cli-linux-amd64.zip && \
-    # Node.js packages
-    npm install -g @anthropic-ai/claude-code @google/gemini-cli && \
     # Cleanup
     apt-get -y autoremove && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt && \
-    # R and RStudio configuration
-    R -e "options(repos = c(CRAN = 'https://cran.ism.ac.jp/'))" && \
+    # R repos: PPM date-pinned binary packages (Ubuntu noble) for reproducibility
+    echo 'options(repos = c(CRAN = "https://packagemanager.posit.co/cran/__linux__/noble/2026-05-18"))' >> /usr/local/lib/R/etc/Rprofile.site && \
+    echo 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))' >> /usr/local/lib/R/etc/Rprofile.site && \
     echo "copilot-enabled=1" >> /etc/rstudio/rsession.conf && \
     cd /home/rstudio && \
     mkdir -p .cache/R/renv .TinyTeX .gemini && \
     chown -R rstudio:rstudio /home/rstudio && \
     chmod -R 777 /home/rstudio && \
     chmod -R 755 /home/rstudio/.gemini
+
+# remotes is required by installGithub.r; rocker/geospatial:4.5.3 no longer pre-installs it
+RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 remotes \
+    && rm -rf /tmp/downloaded_packages/
 
 # Install R packages from GitHub
 RUN installGithub.r \
@@ -122,6 +124,26 @@ RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
     tidymodels duckdb duckplyr \
     && rm -rf /tmp/downloaded_packages/
 
+# Install LibreOffice
+RUN apt-get update && apt-get install -y libreoffice && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
+    rsvg \
+    ggbreak \
+    && rm -rf /tmp/downloaded_packages/
+
+# Additional packages required by srv/mpd/20260403_科別入院診療実績 project
+RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
+    arrow Polychrome future openxlsx2 reactable \
+    shinyWidgets shinybusy shinycssloaders shinymanager shinytest2 \
+    sortable stringdist tidyxl waiter writexl \
+    && rm -rf /tmp/downloaded_packages/
+
+# Install Shiny Server (coexists with RStudio Server under rocker's s6-overlay init)
+RUN /rocker_scripts/install_shiny_server.sh
+
 # Final configuration
 
 # Copy configuration files and setup users
@@ -133,3 +155,11 @@ RUN chmod +x /home/rstudio/add_users.sh && \
     /home/rstudio/add_users.sh user00 user01 user02 user03 user04 user05 user06 user07 user08 user09 user10 && \
     /home/rstudio/add_users.sh user11 user12 user13 user14 user15 user16 user17 user18 user19 user20 && \
     chmod -R 777 /home
+
+# Claude Code and Gemini CLI — placed in the final layer so iterations
+# that bump only these (e.g. on the online dev PC) reuse all earlier caches.
+RUN npm install -g @anthropic-ai/claude-code @google/gemini-cli
+
+# Healthcheck — RStudio Server returns this HTML page without authentication
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s \
+    CMD curl -fsS http://localhost:8787/unsupported_browser.htm > /dev/null || exit 1

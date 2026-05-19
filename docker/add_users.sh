@@ -16,9 +16,6 @@ do
     # ln -s /home/rstudio/srv /home/${USER}/srv で /home/rstudio/srv を /home/${USER}/srv へシンボリックリンクします。
     ln -s /home/rstudio/srv /home/${USER}/srv
 
-        # ln -s /home/rstudio/srv /home/${USER}/srv で /home/rstudio/srv を /home/${USER}/srv へシンボリックリンクします。
-    ln -s /home/rstudio/mpd /home/${USER}/mpd
-    
     # echo "umask 000" >> /home/${USER}/.bashrc でユーザーの .bashrc ファイルに umask 000 を追加します。
     # これにより、新しく作成されるファイルのパーミッションが全ユーザーに対して読み書き可能になります。
     echo "umask 000" >> /home/${USER}/.bashrc
