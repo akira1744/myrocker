@@ -3,12 +3,13 @@
 ## 概要
 
 - R 4.5.3（rocker/geospatial:4.5.3 ベース、Ubuntu 24.04 noble）
-- RStudio Server（GitHub Copilot 有効、ポート 50003）
-- **Shiny Server 同梱（ポート 81）**
+- RStudio Server（GitHub Copilot 有効、Posit Assistant 無効、ポート **50004**）
+- **Shiny Server 同梱（ポート 81）** — オフライン運用向け warm-keep + image 焼き込み Noto Sans JP
 - オフライン環境で使うケースも想定し大量のパッケージを install 済み
 - CRAN リポジトリは Posit Package Manager (PPM) を 2026-05-18 で日付ピン
 - 同梱 CLI: Claude Code、Gemini CLI、GitHub CLI、DuckDB、LibreOffice、Microsoft ODBC 17
 - ユーザー: user00〜user20（パスワード=ユーザー名）
+- **cron 自動起動**（s6 supervision）、起動時に `srv/crontabs/<user>` を自動インストール
 
 
 ## 使い方
@@ -69,6 +70,27 @@ docker/.env
 GEMINI_API_KEY=Your API KEY
 
 ## History
+
+### 2026/05/19（追補: Shiny / cron / ログ運用の整備）
+
+- `bsicons` パッケージを追加
+- RStudio の **Posit Assistant を無効化**（`posit-assistant-enabled=0`）。オフライン環境で `cdn.posit.co` への接続エラーが起動時に出るのを抑止
+- **Shiny Server を warm-keep モードに**（`docker/shiny-server.conf` を image に焼き込み）
+  - `app_idle_timeout 7200`（2時間 warm 保持）
+  - `app_init_timeout 120`（大きい global.R + parquet 読込でも余裕）
+  - `simple_scheduler 100`（単一 R worker で複数セッション共有）
+  - `preserve_logs true` + `sanitize_errors false`（昔の「shiny ログが消える問題」の対処）
+- **Noto Sans JP web fonts を image に焼き込み**（`@fontsource/noto-sans-jp@5` の woff2、`/opt/fonts-web/`）。`location /_fonts/` で配信。`bslib::font_face` から相対 URL で参照可能になり、オフライン環境で Google Fonts CDN を叩かなくて済む
+- **logrotate の設定修正**
+  - `logrotate` パッケージ追加
+  - 同梱の壊れた `/etc/logrotate.d/shiny-server`（単一ファイル想定）を per-session 対応版に上書き
+  - bind mount 由来の 0777 ディレクトリでも動くよう `su root root` を明示
+- **cron 自動起動**
+  - `/etc/services.d/cron/` を s6-overlay 配下に追加
+  - `/etc/cont-init.d/03_install_crontabs` で `srv/crontabs/<user>` を `/var/spool/cron/crontabs/` に展開
+  - logrotate は `/etc/crontab` 経由で毎日 6:25 自動実行
+- **`duckdb-data` named volume を docker-compose から削除**（データは `srv/` 配下に直接置く方針）
+- RStudio ホスト側ポートを 50003 → **50004** に変更
 
 ### 2026/05/19
 

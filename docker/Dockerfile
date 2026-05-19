@@ -54,6 +54,7 @@ RUN sed -i '$d' /etc/locale.gen && \
     echo 'options(repos = c(CRAN = "https://packagemanager.posit.co/cran/__linux__/noble/2026-05-18"))' >> /usr/local/lib/R/etc/Rprofile.site && \
     echo 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))' >> /usr/local/lib/R/etc/Rprofile.site && \
     echo "copilot-enabled=1" >> /etc/rstudio/rsession.conf && \
+    echo "posit-assistant-enabled=0" >> /etc/rstudio/rsession.conf && \
     cd /home/rstudio && \
     mkdir -p .cache/R/renv .TinyTeX .gemini && \
     chown -R rstudio:rstudio /home/rstudio && \
@@ -138,11 +139,45 @@ RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
 RUN install2.r --error --skipinstalled --deps TRUE --ncpu -1 \
     arrow Polychrome future openxlsx2 reactable \
     shinyWidgets shinybusy shinycssloaders shinymanager shinytest2 \
-    sortable stringdist tidyxl waiter writexl \
+    sortable stringdist tidyxl waiter writexl bsicons \
     && rm -rf /tmp/downloaded_packages/
 
 # Install Shiny Server (coexists with RStudio Server under rocker's s6-overlay init)
 RUN /rocker_scripts/install_shiny_server.sh
+
+# logrotate (Shiny の per-session ログを rotate するために必要)。
+# 上層の R パッケージキャッシュを守るため、ここで個別レイヤとして追加する。
+RUN apt-get update && apt-get install -y logrotate && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Bake Noto Sans JP web fonts into the image so offline EMR environments
+# do not need to hit Google Fonts CDN at app startup.
+# Served by shiny-server at /_fonts/ (configured in shiny-server.conf).
+# japanese subset weight 400/700 = ~3-4 MB each (woff2).
+RUN mkdir -p /opt/fonts-web/noto-sans-jp && \
+    curl -fsSL --retry 3 --retry-delay 5 \
+        https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-jp@5/files/noto-sans-jp-japanese-400-normal.woff2 \
+        -o /opt/fonts-web/noto-sans-jp/regular.woff2 && \
+    curl -fsSL --retry 3 --retry-delay 5 \
+        https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-jp@5/files/noto-sans-jp-japanese-700-normal.woff2 \
+        -o /opt/fonts-web/noto-sans-jp/bold.woff2 && \
+    find /opt/fonts-web -type d -exec chmod 755 {} \; && \
+    find /opt/fonts-web -type f -exec chmod 644 {} \;
+
+# Override Shiny Server config with warm-keep settings (idle 2h, init 2min, simple_scheduler 1)
+COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
+
+# Override the broken default logrotate config (single-file pattern) with per-session aware version.
+# preserve_logs true は log を削除しないため、長期運用ではこの rotate が必須。
+# --chmod=644 必須: logrotate は group/others writable の設定ファイルを security 理由で拒否する。
+COPY --chmod=644 shiny-server-logrotate /etc/logrotate.d/shiny-server
+
+# Auto-start cron under s6-overlay
+# /etc/crontab の 6:25 root run-parts で /etc/cron.daily/logrotate も自動実行される。
+# user crontab は cont-init.d で host-mounted srv/crontabs/ から /var/spool/cron/crontabs/ に展開。
+RUN mkdir -p /etc/services.d/cron
+COPY --chmod=755 cron-service-run /etc/services.d/cron/run
+COPY --chmod=755 install_crontabs.sh /etc/cont-init.d/03_install_crontabs
 
 # Final configuration
 

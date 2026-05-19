@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+# s6-overlay service: cron daemon
+# /etc/services.d/cron/run
+#
+# - foreground (-f) で s6 の supervision に任せる
+# - PID 1 にはせず s6 が管理
+# - logrotate (/etc/cron.daily/logrotate) は /etc/crontab の 6:25 トリガで実行される
+# - ユーザ crontab は /etc/cont-init.d/03_install_crontabs が事前に
+#   /var/spool/cron/crontabs/<user> に展開する
+
+exec /usr/sbin/cron -f

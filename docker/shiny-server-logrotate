@@ -1,0 +1,26 @@
+# /etc/logrotate.d/shiny-server  (image-baked override)
+#
+# Shiny Server は per-session 形式で /var/log/shiny-server/<app>-shiny-<date>-<time>-<port>.log を書く。
+# rocker/shiny-server の同梱 logrotate 設定は古く /var/log/shiny-server.log (単一ファイル) を想定
+# しており実体に一致しないため、こちらで上書きする。
+#
+# preserve_logs true が shiny-server.conf 側で設定されているとログは正常終了でも削除されないため、
+# 鬱蓄を避けるためにこのファイルで定期 rotate する。
+#
+# 自動実行: 本 image は cron をデフォルト起動していないため、ユーザ側 crontab で
+#   0 3 * * * /usr/sbin/logrotate /etc/logrotate.d/shiny-server
+# のように1日1回叩いてください。手動なら: sudo /usr/sbin/logrotate /etc/logrotate.d/shiny-server
+
+/var/log/shiny-server/*.log {
+    # /var/log/shiny-server は bind mount 由来で 0777 owned by rstudio になることがある。
+    # logrotate は world-writable な親 dir を見ると拒否するため、su で root 権限実行を明示。
+    su root root
+    daily
+    rotate 14
+    size 5M
+    copytruncate
+    compress
+    delaycompress
+    missingok
+    notifempty
+}
