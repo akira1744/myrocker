@@ -56,7 +56,6 @@ docker load -i myrocker_20260519.tar
    - `../srv/` → `/home/rstudio/srv/` (project files)
    - `../srv/shinyapps` → `/srv/shiny-server/` (Shiny apps)
    - `../srv/shinylog` → `/var/log/shiny-server/` (Shiny logs)
-   - `duckdb-data` named volume → `/var/lib/duckdb`
 
 2. **docker/Dockerfile**: Multi-stage layered build
    - Locale / timezone / CJK fonts / Microsoft ODBC 17 / Node.js 20 / GitHub CLI / DuckDB CLI (single layer)

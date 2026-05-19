@@ -270,8 +270,6 @@ docker compose up -d
 docker compose down -v
 ```
 
-> ⚠️ `-v` を付けると `duckdb-data` ボリュームの中身が消えます。
-
 ---
 
 ## 6. イメージの更新

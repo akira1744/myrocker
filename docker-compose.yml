@@ -12,7 +12,6 @@ services:
       - ../srv/:/home/rstudio/srv/
       - ../srv/shinyapps:/srv/shiny-server/
       - ../srv/shinylog:/var/log/shiny-server/
-      - duckdb-data:/var/lib/duckdb
     environment:
       PASSWORD: rs
       ROOT: "TRUE"
@@ -20,6 +19,3 @@ services:
     tty: true
     stdin_open: true
     restart: always
-
-volumes:
-  duckdb-data:
